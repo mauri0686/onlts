@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OnLTS: Azure Service Bus SDK migration at a fixed price</title>
+<meta name="description" content="Microsoft retires Microsoft.Azure.ServiceBus and WindowsAzure.ServiceBus on September 30, 2026. Fixed-price migration to Azure.Messaging.ServiceBus, delivered as a pull request with your tests passing.">
+<style>
+:root{--ink:#15202b;--muted:#4f5b66;--line:#dfe3e6;--bg:#fbfaf7;--card:#fff;--accent:#0f5a85;--accent-ink:#fff;--warn:#8a4b00;--code:#f1f3f4}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+a{color:var(--accent)}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+header.top{border-bottom:1px solid var(--line);background:var(--card)}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:56px}
+.brand{font-weight:700;font-size:18px;color:var(--ink);text-decoration:none;letter-spacing:-.01em}
+.brand span{color:var(--accent)}
+nav a{color:var(--muted);text-decoration:none;font-size:15px;margin-left:16px}
+nav a:hover{color:var(--ink)}
+nav .hide-sm{display:none}
+h1{font-size:30px;line-height:1.2;letter-spacing:-.02em;margin:0 0 16px}
+h2{font-size:24px;line-height:1.25;letter-spacing:-.01em;margin:0 0 12px}
+h3{font-size:18px;margin:0 0 8px}
+section{padding:48px 0;border-bottom:1px solid var(--line)}
+.hero{padding:40px 0 48px}
+.date{display:inline-block;font-weight:600;color:var(--warn);background:#fff4e5;border:1px solid #f1d4ad;border-radius:4px;padding:2px 8px;font-size:14px;margin-bottom:16px}
+.lead{font-size:18px;color:var(--muted);max-width:640px;margin:0 0 24px}
+.btn{display:inline-block;padding:12px 18px;border-radius:6px;font-weight:600;text-decoration:none;border:1px solid var(--accent);font-size:16px;text-align:center}
+.btn.primary{background:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{background:#0b476a}
+.btn.ghost{background:transparent;color:var(--accent)}
+.btn.ghost:hover{background:#eef4f8}
+.actions{display:flex;flex-wrap:wrap;gap:12px}
+.small{font-size:14px;color:var(--muted)}
+.grid{display:grid;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:20px}
+.card.featured{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+.price{font-size:32px;font-weight:700;letter-spacing:-.02em;margin:4px 0}
+.price small{font-size:15px;font-weight:500;color:var(--muted)}
+.tag{font-size:13px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.05em}
+ul{padding-left:20px;margin:8px 0}
+li{margin:4px 0}
+ul.no li::marker{content:"x  ";color:#9aa3ab}
+.card .btn{width:100%;margin-top:12px}
+table{width:100%;border-collapse:collapse;font-size:15px;background:var(--card)}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:600}
+.table-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+ol.steps{list-style:none;padding:0;margin:0;counter-reset:s}
+ol.steps li{counter-increment:s;position:relative;padding:0 0 16px 44px;margin:0}
+ol.steps li::before{content:counter(s);position:absolute;left:0;top:0;width:30px;height:30px;border-radius:50%;border:1px solid var(--accent);color:var(--accent);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:15px}
+pre,code{font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace}
+pre{background:var(--code);border:1px solid var(--line);border-radius:6px;padding:12px 14px;overflow-x:auto;font-size:14px;margin:12px 0}
+code{background:var(--code);padding:1px 5px;border-radius:4px;font-size:.92em}
+pre code{background:none;padding:0}
+details{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin-bottom:10px}
+summary{cursor:pointer;font-weight:600}
+details p{margin:10px 0 0;color:var(--muted)}
+.sources{font-size:14px;color:var(--muted)}
+footer{padding:32px 0 48px;font-size:14px;color:var(--muted)}
+@media (min-width:720px){
+  h1{font-size:44px}
+  h2{font-size:28px}
+  .hero{padding:72px 0}
+  nav .hide-sm{display:inline}
+  .grid.three{grid-template-columns:repeat(3,1fr)}
+  .grid.two{grid-template-columns:repeat(2,1fr)}
+}
+h1,p,li{overflow-wrap:break-word}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="../">On<span>LTS</span></a>
+    <nav>
+      <a href="#pricing">Pricing</a>
+      <a class="hide-sm" href="#how">How I work</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="hero">
+  <div class="wrap">
+    <div class="date" id="deadline">Retirement: September 30, 2026<span id="days"></span></div>
+    <h1>Microsoft.Azure.ServiceBus and WindowsAzure.ServiceBus are retired on September 30, 2026.</h1>
+    <p class="lead">I move your code to Azure.Messaging.ServiceBus for a fixed price. You get a pull request with your own tests passing, and the runtime details that break after the build (settlement, lock renewal, message bodies) handled.</p>
+    <div class="actions">
+      <a class="btn primary" href="#pricing">See the fixed prices</a>
+      <a class="btn ghost" href="#free-tool">Run the free check first</a>
+    </div>
+  </div>
+</section>
+
+<section id="problem">
+  <div class="wrap">
+    <h2>What the retirement means for your app</h2>
+    <ul>
+      <li><strong>No more support or fixes</strong> for <code>Microsoft.Azure.ServiceBus</code> and <code>WindowsAzure.ServiceBus</code>, security fixes included. The packages keep loading, but you are on your own.</li>
+      <li><strong>SBMP stops working.</strong> <code>WindowsAzure.ServiceBus</code> uses the SBMP protocol by default. Connection strings without <code>TransportType=Amqp</code> are on SBMP, and Microsoft ends SBMP support on the same date.</li>
+      <li><strong>Azure Functions</strong> with the Service Bus extension 4.x or older use the retired types, and the in-process model itself ends support on November 10, 2026.</li>
+      <li><strong>The new SDK behaves differently</strong> in ways that compile fine: auto-complete, a 5 minute lock renewal default, message bodies sent with <code>BrokeredMessage</code>, and <code>MessageId</code> no longer generated for you.</li>
+      <li><strong>Not affected:</strong> <code>WindowsAzure.ServiceBus</code> used for WCF Relay, which Microsoft keeps supporting until further notice.</li>
+    </ul>
+    <p class="sources">Sources:
+      <a href="https://learn.microsoft.com/en-us/azure/service-bus-messaging/service-bus-faq" rel="noopener">Service Bus FAQ (retirement notice)</a> &middot;
+      <a href="https://learn.microsoft.com/en-us/azure/service-bus-messaging/service-bus-amqp-dotnet" rel="noopener">WindowsAzure.ServiceBus and SBMP</a> &middot;
+      <a href="https://github.com/Azure/azure-sdk-for-net/blob/main/sdk/servicebus/Azure.Messaging.ServiceBus/MigrationGuide.md" rel="noopener">Official migration guide</a> &middot;
+      <a href="https://learn.microsoft.com/en-us/answers/questions/1822432/retiring-of-the-windowsazure-servicebus-nuget-pack" rel="noopener">WCF Relay exception (Microsoft Q&amp;A)</a>
+    </p>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="wrap">
+    <h2>Fixed price, three sizes</h2>
+    <p class="small">Prices in USD, paid through Upwork. You know the full cost before anything starts.</p>
+    <div class="card" style="margin-bottom:16px">
+      <h3>Every tier includes</h3>
+      <ul>
+        <li>Every sender, receiver and handler moved to <code>ServiceBusClient</code>, <code>ServiceBusSender</code>, <code>ServiceBusReceiver</code> or <code>ServiceBusProcessor</code></li><li>One shared client per app, registered in dependency injection</li><li>Auto-complete, concurrency and lock renewal set explicitly per handler</li><li><code>UserProperties</code>, <code>Label</code>, dead-letter headers and exception handling moved to the new API</li><li>Notes on what changed and what to watch on deploy</li><li>14 days of fixes for anything the migration caused</li>
+      </ul>
+    </div>
+    <div class="grid three">
+      <div class="card">
+        <div class="tag">Starter</div>
+        <h3>One service</h3>
+        <div class="price">US$390</div>
+        <p class="small">Delivery in 5 days from access.</p>
+        <ul>
+          <li>One project using <code>Microsoft.Azure.ServiceBus</code></li><li>Up to 10 senders, receivers or handlers</li><li>Queues and topics, without sessions</li><li>1 revision</li>
+        </ul>
+        <a class="btn ghost" data-pay="basic" href="#pricing">Order one service</a>
+      </div>
+      <div class="card featured">
+        <div class="tag">Standard</div>
+        <h3>Several services</h3>
+        <div class="price">US$790</div>
+        <p class="small">Delivery in 8 days from access.</p>
+        <ul>
+          <li>Up to 5 projects, up to 30 senders, receivers or handlers</li><li>Sessions, dead-letter handling, scheduled messages</li><li>Azure Functions Service Bus extension to 5.x, <code>host.json</code> included</li><li>2 revisions</li>
+        </ul>
+        <a class="btn primary" data-pay="standard" href="#pricing">Order several services</a>
+      </div>
+      <div class="card">
+        <div class="tag">Advanced</div>
+        <h3>Full migration</h3>
+        <div class="price">US$1,290</div>
+        <p class="small">Delivery in 12 days from access.</p>
+        <ul>
+          <li>Up to 12 projects</li><li><code>WindowsAzure.ServiceBus</code> and SBMP, <code>BrokeredMessage</code> bodies, <code>NamespaceManager</code></li><li>Transactions, and a rollout plan for old and new message formats side by side</li><li>3 revisions</li>
+        </ul>
+        <a class="btn ghost" data-pay="advanced" href="#pricing">Order full migration</a>
+      </div>
+    </div>
+    <p class="small">Delivery in business days from access. If your code turns out bigger than the tier you bought, I tell you before starting and you choose: pay the difference or get a full refund.</p>
+    <div class="card" style="margin-top:16px">
+      <h3>Not included</h3>
+      <ul class="no">
+        <li>Deploying to your servers or touching production</li><li>Changes to the Service Bus namespace itself (tiers, networking, access policies)</li><li>Moving the function app to the isolated worker model (a separate fixed-price job)</li><li>WCF Relay code, which is not part of this retirement</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <h2>How I work</h2>
+    <p class="small">Everything happens in writing, on your schedule. A 15-minute call is available if you want one, never required.</p>
+    <ol class="steps">
+      <li><strong>Read-only access.</strong> Add a read-only collaborator on GitHub, Azure DevOps or GitLab, or send a zip. No production credentials and no secrets.</li>
+      <li><strong>The work gets done.</strong> A set of AI coding agents does the scanning, the code changes and the test runs. I review every change and sign off before you see it.</li>
+      <li><strong>You get a pull request.</strong> With notes on what changed, what to watch on deploy and the results of your own tests. Without write access, you get a patch file.</li>
+      <li><strong>You deploy.</strong> I never touch production: no deploys, no production databases, no infrastructure changes. You merge and release when it suits you.</li>
+    </ol>
+    <p>The job is accepted when the solution builds and <strong>your existing tests pass</strong>. Tests that already failed before are listed in the notes and stay out of scope. No automated tests? We agree on a short smoke checklist before I start, and that becomes the acceptance criterion.</p>
+  </div>
+</section>
+
+<section id="free-tool">
+  <div class="wrap">
+    <h2>Free first step: check your solution yourself</h2>
+    <p>Net10Check is a free command-line tool. Run it in your solution folder and it lists every project that references <code>Microsoft.Azure.ServiceBus</code> or <code>WindowsAzure.ServiceBus</code>, along with in-process Azure Functions and the other things that block .NET 10. It runs locally and uploads nothing.</p>
+<pre><code>dotnet tool install -g Net10Check
+net10-check</code></pre>
+    <p class="small">If the report is short, you can probably do it in-house. If it is long, send it to me and I will tell you, for free, which tier fits. <a data-mail href="#">Message me on Upwork</a>.</p>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <h2>FAQ</h2>
+    <details><summary>My app uses WindowsAzure.ServiceBus only for WCF Relay.</summary>
+      <p>Then this retirement does not apply to it. Microsoft confirmed that WindowsAzure.ServiceBus stays supported with WCF Relay until further notice. If the same project also uses queues or topics, only that code needs to move.</p></details>
+    <details><summary>We cannot finish before September 30. Is there a stopgap?</summary>
+      <p>For WindowsAzure.ServiceBus, adding <code>;TransportType=Amqp</code> to the connection string moves it off SBMP, with some documented behavior differences. It buys time, it is not the migration. I can tell you in the first day whether it applies to you.</p></details>
+    <details><summary>There are messages in our queues sent by the old code.</summary>
+      <p>Bodies created with <code>new BrokeredMessage(object)</code> are serialized in a format the new SDK does not read by itself. The Advanced tier includes reading both formats until the queues are clean, and the order in which to deploy consumers and producers.</p></details>
+    <details><summary>Which tier do I need?</summary>
+      <p>Run Net10Check and send me the output, or tell me how many projects use the old packages. I tell you the tier for free before you buy.</p></details>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Questions before buying? <a data-mail href="#">Write to me</a>, I answer within one business day. Other services: <a href="../">.NET 8/9 to .NET 10 upgrades</a>.</p>
+    <p>OnLTS is an independent service, not affiliated with or endorsed by Microsoft or Umbraco. .NET and Azure are trademarks of Microsoft Corporation.</p>
+  </div>
+</footer>
+
+<script>
+// Checkout and contact config: the ONLY place to edit. Replace each link with the Upwork project URL once it exists.
+var CONFIG = {
+  LINK_BASIC:    "https://www.upwork.com/freelancers/~01329b865d484d6b44",
+  LINK_STANDARD: "https://www.upwork.com/freelancers/~01329b865d484d6b44",
+  LINK_ADVANCED: "https://www.upwork.com/freelancers/~01329b865d484d6b44",
+  UPWORK_URL:    "https://www.upwork.com/freelancers/~01329b865d484d6b44"
+};
+var pay = {basic:CONFIG.LINK_BASIC, standard:CONFIG.LINK_STANDARD, advanced:CONFIG.LINK_ADVANCED};
+document.querySelectorAll("[data-pay]").forEach(function (a) {
+  var url = pay[a.getAttribute("data-pay")];
+  if (!/^https:\/\//.test(url)) url = CONFIG.UPWORK_URL;
+  a.href = url; a.rel = "noopener";
+});
+document.querySelectorAll("[data-mail]").forEach(function (a) { a.href = CONFIG.UPWORK_URL; a.rel = "noopener"; });
+var d = Math.ceil((Date.UTC(2026, 8, 30) - Date.now()) / 864e5);
+if (d > 0) document.getElementById("days").textContent = " (" + d + (d === 1 ? " day" : " days") + " left)";
+else document.getElementById("deadline").textContent = "Retired on September 30, 2026";
+</script>
+</body>
+</html>
