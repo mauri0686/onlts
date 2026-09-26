@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OnLTS: fixed-price .NET 8/9 to .NET 10 upgrades</title>
+<meta name="description" content=".NET 8 and .NET 9 stop getting security patches on November 10, 2026. Fixed-price audit, upgrade to .NET 10 delivered as a pull request with your tests green, and a monthly Keep Current plan.">
+<style>
+:root{--ink:#15202b;--muted:#4f5b66;--line:#dfe3e6;--bg:#fbfaf7;--card:#fff;--accent:#0f5a85;--accent-ink:#fff;--warn:#8a4b00;--code:#f1f3f4}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+a{color:var(--accent)}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+header.top{border-bottom:1px solid var(--line);background:var(--card)}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:56px}
+.brand{font-weight:700;font-size:18px;color:var(--ink);text-decoration:none;letter-spacing:-.01em}
+.brand span{color:var(--accent)}
+nav a{color:var(--muted);text-decoration:none;font-size:15px;margin-left:16px}
+nav a:hover{color:var(--ink)}
+nav .hide-sm{display:none}
+h1{font-size:30px;line-height:1.2;letter-spacing:-.02em;margin:0 0 16px}
+h2{font-size:24px;line-height:1.25;letter-spacing:-.01em;margin:0 0 12px}
+h3{font-size:18px;margin:0 0 8px}
+section{padding:48px 0;border-bottom:1px solid var(--line)}
+.hero{padding:40px 0 48px}
+.date{display:inline-block;font-weight:600;color:var(--warn);background:#fff4e5;border:1px solid #f1d4ad;border-radius:4px;padding:2px 8px;font-size:14px;margin-bottom:16px}
+.lead{font-size:18px;color:var(--muted);max-width:640px;margin:0 0 24px}
+.btn{display:inline-block;padding:12px 18px;border-radius:6px;font-weight:600;text-decoration:none;border:1px solid var(--accent);font-size:16px;text-align:center}
+.btn.primary{background:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{background:#0b476a}
+.btn.ghost{background:transparent;color:var(--accent)}
+.btn.ghost:hover{background:#eef4f8}
+.actions{display:flex;flex-wrap:wrap;gap:12px}
+.small{font-size:14px;color:var(--muted)}
+.grid{display:grid;gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:20px}
+.card.featured{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+.price{font-size:32px;font-weight:700;letter-spacing:-.02em;margin:4px 0}
+.price small{font-size:15px;font-weight:500;color:var(--muted)}
+.tag{font-size:13px;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.05em}
+ul{padding-left:20px;margin:8px 0}
+li{margin:4px 0}
+ul.no li::marker{content:"x  ";color:#9aa3ab}
+.card .btn{width:100%;margin-top:12px}
+table{width:100%;border-collapse:collapse;font-size:15px;background:var(--card)}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);font-weight:600}
+.table-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+ol.steps{list-style:none;padding:0;margin:0;counter-reset:s}
+ol.steps li{counter-increment:s;position:relative;padding:0 0 16px 44px;margin:0}
+ol.steps li::before{content:counter(s);position:absolute;left:0;top:0;width:30px;height:30px;border-radius:50%;border:1px solid var(--accent);color:var(--accent);font-weight:700;display:flex;align-items:center;justify-content:center;font-size:15px}
+pre,code{font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace}
+pre{background:var(--code);border:1px solid var(--line);border-radius:6px;padding:12px 14px;overflow-x:auto;font-size:14px;margin:12px 0}
+code{background:var(--code);padding:1px 5px;border-radius:4px;font-size:.92em}
+pre code{background:none;padding:0}
+details{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:14px 16px;margin-bottom:10px}
+summary{cursor:pointer;font-weight:600}
+details p{margin:10px 0 0;color:var(--muted)}
+.sources{font-size:14px;color:var(--muted)}
+footer{padding:32px 0 48px;font-size:14px;color:var(--muted)}
+@media (min-width:720px){
+  h1{font-size:44px}
+  h2{font-size:28px}
+  .hero{padding:72px 0}
+  nav .hide-sm{display:inline}
+  .grid.three{grid-template-columns:repeat(3,1fr)}
+  .grid.two{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#">On<span>LTS</span></a>
+    <nav>
+      <a class="hide-sm" href="#eol">Why now</a>
+      <a href="#pricing">Pricing</a>
+      <a class="hide-sm" href="#how">How it works</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="hero">
+  <div class="wrap">
+    <div class="date">End of support: November 10, 2026<span id="days"></span></div>
+    <h1>Your .NET 8 and .NET 9 apps stop getting security patches on November 10, 2026.</h1>
+    <p class="lead">I upgrade them to .NET 10, the current LTS release supported until November 2028, for a fixed price. You get a pull request with your own tests passing. No hourly billing and no mandatory calls.</p>
+    <div class="actions">
+      <a class="btn primary" data-pay="audit" href="#pricing">Start with a US$190 audit</a>
+      <a class="btn ghost" href="#free-tool">Run the free check first</a>
+    </div>
+  </div>
+</section>
+
+<section id="eol">
+  <div class="wrap">
+    <h2>What happens if you stay on .NET 8 or 9</h2>
+    <p>Your app keeps running. What stops is everything that keeps it safe to run:</p>
+    <ul>
+      <li><strong>No more security fixes.</strong> Microsoft ships runtime and ASP.NET Core patches every month on Patch Tuesday. After November 10, 2026, .NET 8 and .NET 9 get none.</li>
+      <li><strong>No bug fixes and no Microsoft support</strong> for those versions.</li>
+      <li><strong>Vulnerabilities found later stay open</strong> in your runtime, even when the fix exists for .NET 10.</li>
+      <li><strong>Security scanners and audits</strong> commonly flag unsupported runtimes, which tends to surface in customer security reviews.</li>
+      <li><strong>Azure Functions on the in-process model</strong> also reaches end of support on November 10, 2026, and .NET 10 only runs on the isolated worker model.</li>
+    </ul>
+    <p class="sources">Sources:
+      <a href="https://devblogs.microsoft.com/dotnet/dotnet-8-9-end-of-support/" rel="noopener">.NET Blog: .NET 8 and .NET 9 will reach End of Support on November 10, 2026</a> ·
+      <a href="https://dotnet.microsoft.com/en-us/platform/support/policy" rel="noopener">.NET support policy</a> ·
+      <a href="https://learn.microsoft.com/en-us/dotnet/core/compatibility/10" rel="noopener">Breaking changes in .NET 10</a> ·
+      <a href="https://learn.microsoft.com/en-us/azure/azure-functions/migrate-dotnet-to-isolated-model" rel="noopener">Azure Functions: migrate to the isolated worker model</a>
+    </p>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="wrap">
+    <h2>Three fixed prices</h2>
+    <p class="small">Prices in USD. You know the full cost before anything starts.</p>
+    <div class="grid three">
+
+      <div class="card">
+        <div class="tag">1. Audit</div>
+        <div class="price">US$190</div>
+        <p class="small">Written report in 48 hours from access. One solution, up to 30 projects.</p>
+        <ul>
+          <li>Every project, its target framework and what blocks .NET 10</li>
+          <li>NuGet packages without .NET 10 support or with known vulnerabilities</li>
+          <li>Breaking changes that touch your code, with file references</li>
+          <li>Docker images, CI pipelines and Azure Functions model</li>
+          <li>Effort estimate and the upgrade size that fits</li>
+        </ul>
+        <p class="small">The US$190 is credited in full if you order the upgrade within 30 days.</p>
+        <a class="btn primary" data-pay="audit" href="#pricing">Buy the audit</a>
+      </div>
+
+      <div class="card featured">
+        <div class="tag">2. Upgrade one app</div>
+        <div class="price">from US$990</div>
+        <p class="small">Pull request with your tests green.</p>
+        <ul>
+          <li>Target framework, SDK and <code>global.json</code> moved to .NET 10</li>
+          <li>NuGet packages updated to compatible versions</li>
+          <li>Build errors and breaking changes fixed</li>
+          <li>Dockerfiles and CI pipeline SDK versions updated</li>
+          <li>Upgrade notes: what changed and what to watch on deploy</li>
+          <li>14 days of fixes for anything the upgrade caused</li>
+        </ul>
+        <a class="btn primary" data-pay="small" href="#pricing">Small, US$990</a>
+        <a class="btn ghost" data-pay="medium" href="#pricing">Medium, US$1,690</a>
+        <a class="btn ghost" data-pay="large" href="#pricing">Large, US$2,490</a>
+      </div>
+
+      <div class="card">
+        <div class="tag">3. Keep Current</div>
+        <div class="price">US$290 <small>/ month per app</small></div>
+        <p class="small">Stay patched without thinking about it.</p>
+        <ul>
+          <li>Monthly .NET servicing update after Patch Tuesday, as a PR</li>
+          <li>Dependency updates (patch and minor), majors flagged and planned</li>
+          <li>CVE monitoring on your packages, fix PR when one applies</li>
+          <li>Next LTS upgrade (.NET 12, expected November 2027) included after 6 paid months</li>
+          <li>Cancel any month</li>
+        </ul>
+        <p class="small">For Small and Medium apps already on .NET 10. Larger apps: ask for a quote.</p>
+        <a class="btn primary" data-pay="keep" href="#pricing">Subscribe</a>
+      </div>
+    </div>
+
+    <h3 style="margin-top:32px">Upgrade sizes</h3>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Size</th><th>Price</th><th>Projects</th><th>Code lines</th><th>Delivery</th></tr></thead>
+        <tbody>
+          <tr><td>Small</td><td>US$990</td><td>up to 5</td><td>20k</td><td>5 days</td></tr>
+          <tr><td>Medium</td><td>US$1,690</td><td>up to 15</td><td>80k</td><td>10 days</td></tr>
+          <tr><td>Large</td><td>US$2,490</td><td>up to 30</td><td>200k</td><td>15 days</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="small">Projects in the solution and lines of C#/Razor code. Delivery in business days from access. Generated code and test projects do not count toward the line limit. If your app turns out bigger than the size you bought, I tell you before starting and you choose: pay the difference or get a full refund.</p>
+
+    <div class="grid two" style="margin-top:24px">
+      <div class="card">
+        <h3>Not included in any plan</h3>
+        <ul class="no">
+          <li>Deploying to your servers or touching production</li>
+          <li>Applying database migrations (I generate them, you apply them)</li>
+          <li>New features or refactoring beyond what the upgrade needs</li>
+          <li>Paid third-party component licenses (Telerik, DevExpress and similar)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Quoted separately</h3>
+        <ul>
+          <li>.NET Framework 4.x to .NET 10 migrations</li>
+          <li>Web Forms, WCF server and Xamarin apps</li>
+          <li>Solutions above the Large limits</li>
+          <li>Apps on .NET 6 or 7 with many outdated packages (the audit tells you)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <h2>How it works</h2>
+    <p class="small">Everything happens in writing, on your schedule. A 15-minute call is available if you want one, never required.</p>
+    <ol class="steps">
+      <li><strong>Pick a plan and pay.</strong> Not sure about the size? Buy the audit, or run the free tool below and send me the output.</li>
+      <li><strong>Give read-only access.</strong> Add a read-only collaborator on GitHub, Azure DevOps or GitLab, or send a zip. No production credentials, no secrets.</li>
+      <li><strong>The work gets done.</strong> A set of AI coding agents does the analysis, the upgrade and the test runs. I review every change and sign off before you see it.</li>
+      <li><strong>You get a pull request.</strong> With upgrade notes and the test results. You review, merge and deploy when it suits you. Without write access, you get a patch file.</li>
+    </ol>
+  </div>
+</section>
+
+<section id="acceptance">
+  <div class="wrap grid two">
+    <div>
+      <h2>When the job is done</h2>
+      <p>The upgrade is accepted when your solution builds on .NET 10 and <strong>your existing tests pass</strong> with <code>dotnet test</code>. Tests that already failed before the upgrade are listed in the notes and stay out of scope.</p>
+      <p>No automated tests? We agree on a short smoke checklist before I start, and that becomes the acceptance criterion.</p>
+      <p><strong>I never touch production.</strong> No deploys, no production databases, no infrastructure changes.</p>
+    </div>
+    <div>
+      <h2>Guarantee</h2>
+      <p>If the audit is not useful to you, tell me within 7 days of delivery and I refund it. No questions, no form.</p>
+      <p>If your app does not fit the upgrade size you bought, you hear it from me before any work starts, with the option of a full refund.</p>
+    </div>
+  </div>
+</section>
+
+<section id="free-tool">
+  <div class="wrap">
+    <h2>Free first step: check your solution yourself</h2>
+    <p>Run this in the folder of your solution. It uses only the .NET SDK you already have and lists every package that has a newer version. Nothing is uploaded anywhere.</p>
+<pre><code>dotnet list package --outdated</code></pre>
+    <p class="small">Send me that output plus the <code>&lt;TargetFramework&gt;</code> line of each project and I will tell you, for free, how big your upgrade is and which size fits. A dedicated free scanner, Net10Check, is coming to NuGet soon.</p>
+      </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <h2>FAQ</h2>
+    <details><summary>Do you handle Blazor apps?</summary>
+      <p>Yes, Blazor Server, WebAssembly and the Blazor Web App template. The ASP.NET Core 10 breaking changes (for example the obsolete <code>WebHostBuilder</code> and Razor runtime compilation) are part of the upgrade.</p></details>
+    <details><summary>What about EF Core?</summary>
+      <p>EF Core is upgraded to 10 along with the app. I check the EF Core 10 breaking changes against your model, such as the new JSON column type on Azure SQL and the new translation of parameterized collections. If the model changes, I generate the migration and you decide when to apply it.</p></details>
+    <details><summary>We use Azure Functions.</summary>
+      <p>Isolated worker apps are upgraded like any other project. In-process apps have to move to the isolated worker model to run on .NET 10, and that code migration is included. Switching the function app in Azure to the isolated runtime is a deployment step, so you do it; the upgrade notes explain how, ideally through a staging slot. Each function app counts as one project for sizing.</p></details>
+    <details><summary>Our app is on .NET Framework 4.x.</summary>
+      <p>That is a different job with a different risk profile. Send me the output of the free check or buy the audit and I will quote it separately.</p></details>
+    <details><summary>Will you sign an NDA?</summary>
+      <p>Yes. Send yours before sharing access and I sign it.</p></details>
+    <details><summary>How do you handle our code?</summary>
+      <p>Read-only access only, no production secrets needed. The code is worked on in a private environment and I delete my working copy whenever you ask. The work uses AI coding tools under my review; if your policy restricts that, say so before buying and I will tell you plainly whether I can take the job.</p></details>
+    <details><summary>Why fixed prices and not hourly?</summary>
+      <p>You should know the cost before approving the work. The audit tells you the size, the size sets the price.</p></details>
+  </div>
+</section>
+
+<section id="about">
+  <div class="wrap">
+    <h2>Who is behind this</h2>
+    <p>I am Mauricio Acuña, a .NET developer with 13 years of production work in C#, ASP.NET and EF Core (and Blazor more recently), the last three remote with US teams. I have led teams of up to 8 developers. I work from Argentina (GMT-3, overlapping US business hours) and write in English.</p>
+    <p>I use a set of AI coding agents to do the repetitive part of an upgrade: scanning, package bumps, build fixes and test runs. I review every change and I am the one who signs off on your pull request.</p>
+    <p><a href="https://www.linkedin.com/in/mauri0686" rel="noopener">LinkedIn</a> · <a data-mail href="#">Upwork</a></p>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Questions before buying? <a data-mail href="#">Write to me</a>, I answer within one business day.</p>
+    <p>OnLTS is an independent service, not affiliated with or endorsed by Microsoft. .NET is a trademark of Microsoft Corporation.</p>
+  </div>
+</footer>
+
+<script>
+// Checkout and contact config: the ONLY place to edit before going live.
+var CONFIG = {
+  PAYPAL_LINK_AUDIT:  "PAYPAL_LINK_AUDIT",
+  PAYPAL_LINK_SMALL:  "PAYPAL_LINK_SMALL",
+  PAYPAL_LINK_MEDIUM: "PAYPAL_LINK_MEDIUM",
+  PAYPAL_LINK_LARGE:  "PAYPAL_LINK_LARGE",
+  PAYPAL_LINK_KEEP:   "PAYPAL_LINK_KEEP",
+  CONTACT_EMAIL:      "CONTACT_EMAIL",
+  // ponytail: until PayPal links exist, every buy/contact button goes to the Upwork profile (Upwork escrow = trust for a new seller)
+  UPWORK_URL:         "https://www.upwork.com/freelancers/~01329b865d484d6b44"
+};
+var pay = {audit:CONFIG.PAYPAL_LINK_AUDIT, small:CONFIG.PAYPAL_LINK_SMALL, medium:CONFIG.PAYPAL_LINK_MEDIUM, large:CONFIG.PAYPAL_LINK_LARGE, keep:CONFIG.PAYPAL_LINK_KEEP};
+document.querySelectorAll("[data-pay]").forEach(function (a) {
+  var url = pay[a.getAttribute("data-pay")];
+  if (!/^https:\/\//.test(url)) url = CONFIG.UPWORK_URL;
+  if (/^https:\/\//.test(url)) { a.href = url; a.rel = "noopener"; }
+});
+document.querySelectorAll("[data-mail]").forEach(function (a) {
+  if (CONFIG.CONTACT_EMAIL.indexOf("@") > 0) { a.href = "mailto:" + CONFIG.CONTACT_EMAIL; }
+  else if (CONFIG.UPWORK_URL) { a.href = CONFIG.UPWORK_URL; a.rel = "noopener"; }
+});
+var d = Math.ceil((Date.UTC(2026, 10, 10) - Date.now()) / 864e5);
+if (d > 0) document.getElementById("days").textContent = " (" + d + " days left)";
+</script>
+</body>
+</html>
