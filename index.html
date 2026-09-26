@@ -238,10 +238,11 @@ footer{padding:32px 0 48px;font-size:14px;color:var(--muted)}
 <section id="free-tool">
   <div class="wrap">
     <h2>Free first step: check your solution yourself</h2>
-    <p>Run this in the folder of your solution. It uses only the .NET SDK you already have and lists every package that has a newer version. Nothing is uploaded anywhere.</p>
-<pre><code>dotnet list package --outdated</code></pre>
-    <p class="small">Send me that output plus the <code>&lt;TargetFramework&gt;</code> line of each project and I will tell you, for free, how big your upgrade is and which size fits. A dedicated free scanner, Net10Check, is coming to NuGet soon.</p>
-      </div>
+    <p>Net10Check is a free command-line tool. Run it in the folder of your solution and it lists the projects, packages and settings that will need work to reach .NET 10, including packages that have no .NET 10 release yet. Nothing is uploaded anywhere.</p>
+<pre><code>dotnet tool install -g Net10Check
+net10-check</code></pre>
+    <p class="small">If the report is short, you can probably do the upgrade in-house. If it is long, send it to me and I will tell you, for free, which size fits.</p>
+  </div>
 </section>
 
 <section id="faq">
@@ -254,7 +255,7 @@ footer{padding:32px 0 48px;font-size:14px;color:var(--muted)}
     <details><summary>We use Azure Functions.</summary>
       <p>Isolated worker apps are upgraded like any other project. In-process apps have to move to the isolated worker model to run on .NET 10, and that code migration is included. Switching the function app in Azure to the isolated runtime is a deployment step, so you do it; the upgrade notes explain how, ideally through a staging slot. Each function app counts as one project for sizing.</p></details>
     <details><summary>Our app is on .NET Framework 4.x.</summary>
-      <p>That is a different job with a different risk profile. Send me the output of the free check or buy the audit and I will quote it separately.</p></details>
+      <p>That is a different job with a different risk profile. Send me the Net10Check report or buy the audit and I will quote it separately.</p></details>
     <details><summary>Will you sign an NDA?</summary>
       <p>Yes. Send yours before sharing access and I sign it.</p></details>
     <details><summary>How do you handle our code?</summary>
