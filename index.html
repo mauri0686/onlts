@@ -78,6 +78,7 @@ footer{padding:32px 0 48px;font-size:14px;color:var(--muted)}
       <a class="hide-sm" href="#eol">Why now</a>
       <a href="#pricing">Pricing</a>
       <a class="hide-sm" href="#how">How it works</a>
+      <a class="hide-sm" href="#umbraco">Umbraco</a>
       <a href="#faq">FAQ</a>
     </nav>
   </div>
@@ -242,6 +243,17 @@ footer{padding:32px 0 48px;font-size:14px;color:var(--muted)}
 <pre><code>dotnet tool install -g Net10Check
 net10-check</code></pre>
     <p class="small">If the report is short, you can probably do the upgrade in-house. If it is long, send it to me and I will tell you, for free, which size fits.</p>
+  </div>
+</section>
+
+<section id="umbraco">
+  <div class="wrap">
+    <h2>On Umbraco 13? It loses support on December 14, 2026</h2>
+    <p>Umbraco 13 is the last version on .NET 8 with the old AngularJS backoffice. Moving to Umbraco 17 LTS (supported until November 2028) means a new backoffice, so custom dashboards and property editors built in AngularJS have to be rebuilt, and some community packages still have no version for 17.</p>
+    <p>Umbraco17Check is a free command-line tool that shows, for your site, which packages already support Umbraco 17, which ones block the upgrade, how much AngularJS backoffice code you have and which content model features need migrating. It runs locally and uploads nothing.</p>
+<pre><code>dotnet tool install -g Umbraco17Check
+umbraco17-check</code></pre>
+    <p class="small">Send me the report and I will quote the upgrade to Umbraco 17 at a fixed price. <a data-mail href="#">Message me on Upwork</a>.</p>
   </div>
 </section>
 
