@@ -91,7 +91,7 @@ footer{padding:32px 0 48px;font-size:14px;color:var(--muted)}
     <h1>Your .NET 8 and .NET 9 apps stop getting security patches on November 10, 2026.</h1>
     <p class="lead">I upgrade them to .NET 10, the current LTS release supported until November 2028, for a fixed price. You get a pull request with your own tests passing. No hourly billing and no mandatory calls.</p>
     <div class="actions">
-      <a class="btn primary" data-pay="audit" href="#pricing">Start with a US$190 audit</a>
+      <a class="btn primary" data-pay="audit" href="#pricing">Start with a US$79 quick check</a>
       <a class="btn ghost" href="#free-tool">Run the free check first</a>
     </div>
   </div>
@@ -125,8 +125,8 @@ footer{padding:32px 0 48px;font-size:14px;color:var(--muted)}
 
       <div class="card">
         <div class="tag">1. Audit</div>
-        <div class="price">US$190</div>
-        <p class="small">Written report in 48 hours from access. One solution, up to 30 projects.</p>
+        <div class="price">from US$79</div>
+        <p class="small">Written report in 48 hours from access. Quick check: one solution, up to 10 projects. Full audit (up to 30 projects): US$190.</p>
         <ul>
           <li>Every project, its target framework and what blocks .NET 10</li>
           <li>NuGet packages without .NET 10 support or with known vulnerabilities</li>
@@ -134,13 +134,13 @@ footer{padding:32px 0 48px;font-size:14px;color:var(--muted)}
           <li>Docker images, CI pipelines and Azure Functions model</li>
           <li>Effort estimate and the upgrade size that fits</li>
         </ul>
-        <p class="small">The US$190 is credited in full if you order the upgrade within 30 days.</p>
+        <p class="small">The audit fee is credited in full if you order the upgrade within 30 days.</p>
         <a class="btn primary" data-pay="audit" href="#pricing">Buy the audit</a>
       </div>
 
       <div class="card featured">
         <div class="tag">2. Upgrade one app</div>
-        <div class="price">from US$590</div>
+        <div class="price">from US$290</div>
         <p class="small">Pull request with your tests green.</p>
         <ul>
           <li>Target framework, SDK and <code>global.json</code> moved to .NET 10</li>
@@ -150,9 +150,9 @@ footer{padding:32px 0 48px;font-size:14px;color:var(--muted)}
           <li>Upgrade notes: what changed and what to watch on deploy</li>
           <li>14 days of fixes for anything the upgrade caused</li>
         </ul>
-        <a class="btn primary" data-pay="small" href="#pricing">Small, US$590</a>
-        <a class="btn ghost" data-pay="medium" href="#pricing">Medium, US$990</a>
-        <a class="btn ghost" data-pay="large" href="#pricing">Large, US$1,490</a>
+        <a class="btn primary" data-pay="small" href="#pricing">One project, US$290</a>
+        <a class="btn ghost" data-pay="medium" href="#pricing">Small app, US$590</a>
+        <a class="btn ghost" data-pay="large" href="#pricing">Medium app, US$990</a>
       </div>
 
       <div class="card">
@@ -176,9 +176,10 @@ footer{padding:32px 0 48px;font-size:14px;color:var(--muted)}
       <table>
         <thead><tr><th>Size</th><th>Price</th><th>Projects</th><th>Code lines</th><th>Delivery</th></tr></thead>
         <tbody>
-          <tr><td>Small</td><td>US$590</td><td>up to 5</td><td>20k</td><td>5 days</td></tr>
-          <tr><td>Medium</td><td>US$990</td><td>up to 15</td><td>80k</td><td>10 days</td></tr>
-          <tr><td>Large</td><td>US$1,490</td><td>up to 30</td><td>200k</td><td>15 days</td></tr>
+          <tr><td>One project</td><td>US$290</td><td>1 (API, worker or library)</td><td>10k</td><td>3 days</td></tr>
+          <tr><td>Small app</td><td>US$590</td><td>up to 5</td><td>20k</td><td>5 days</td></tr>
+          <tr><td>Medium app</td><td>US$990</td><td>up to 15</td><td>80k</td><td>10 days</td></tr>
+          <tr><td>Larger</td><td>fixed quote after the audit</td><td>16+</td><td>80k+</td><td>agreed</td></tr>
         </tbody>
       </table>
     </div>
@@ -199,7 +200,7 @@ footer{padding:32px 0 48px;font-size:14px;color:var(--muted)}
         <ul>
           <li>.NET Framework 4.x to .NET 10 migrations</li>
           <li>Web Forms, WCF server and Xamarin apps</li>
-          <li>Solutions above the Large limits</li>
+          <li>Solutions above the Medium app limits</li>
           <li>Apps on .NET 6 or 7 with many outdated packages (the audit tells you)</li>
         </ul>
       </div>
@@ -309,10 +310,9 @@ umbraco17-check</code></pre>
 // Checkout and contact config: the ONLY place to edit before going live.
 var CONFIG = {
   PAYPAL_LINK_AUDIT:  "https://www.upwork.com/services/product/development-it-a-net-8-9-to-net-10-upgrade-audit-in-48-hours-2103853686015362725",
-  // ponytail: upgrade project deleted 02-oct; small/medium/large route to the audit until the new project is approved
-  PAYPAL_LINK_SMALL:  "https://www.upwork.com/services/product/development-it-a-net-8-9-to-net-10-upgrade-audit-in-48-hours-2103853686015362725",
-  PAYPAL_LINK_MEDIUM: "https://www.upwork.com/services/product/development-it-a-net-8-9-to-net-10-upgrade-audit-in-48-hours-2103853686015362725",
-  PAYPAL_LINK_LARGE:  "https://www.upwork.com/services/product/development-it-a-net-8-9-to-net-10-upgrade-audit-in-48-hours-2103853686015362725",
+  PAYPAL_LINK_SMALL:  "https://www.upwork.com/services/product/development-it-your-net-8-or-9-app-upgraded-to-net-10-with-tests-passing-2106068387040163323",
+  PAYPAL_LINK_MEDIUM: "https://www.upwork.com/services/product/development-it-your-net-8-or-9-app-upgraded-to-net-10-with-tests-passing-2106068387040163323",
+  PAYPAL_LINK_LARGE:  "https://www.upwork.com/services/product/development-it-your-net-8-or-9-app-upgraded-to-net-10-with-tests-passing-2106068387040163323",
   PAYPAL_LINK_KEEP:   "PAYPAL_LINK_KEEP",
   CONTACT_EMAIL:      "CONTACT_EMAIL",
   // ponytail: until PayPal links exist, every buy/contact button goes to the Upwork profile (Upwork escrow = trust for a new seller)
