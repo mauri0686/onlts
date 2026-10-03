@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OnLTS: Azure Service Bus SDK migration at a fixed price</title>
-<meta name="description" content="Microsoft retires Microsoft.Azure.ServiceBus and WindowsAzure.ServiceBus on September 30, 2026. Fixed-price migration to Azure.Messaging.ServiceBus, delivered as a pull request with your tests passing.">
+<title>OnLTS: WindowsAzure.ServiceBus and SBMP after September 30, 2026</title>
+<meta name="description" content="SBMP ended on September 30, 2026. Get WindowsAzure.ServiceBus working again with TransportType=Amqp, then migrate to Azure.Messaging.ServiceBus at a fixed price. Fixed-price migration to Azure.Messaging.ServiceBus, delivered as a pull request with your tests passing.">
 <style>
 :root{--ink:#15202b;--muted:#4f5b66;--line:#dfe3e6;--bg:#fbfaf7;--card:#fff;--accent:#0f5a85;--accent-ink:#fff;--warn:#8a4b00;--code:#f1f3f4}
 *{box-sizing:border-box}
@@ -87,7 +87,7 @@ h1,p,li{overflow-wrap:break-word}
 <section class="hero">
   <div class="wrap">
     <div class="date" id="deadline">Retirement: September 30, 2026<span id="days"></span></div>
-    <h1>Microsoft.Azure.ServiceBus and WindowsAzure.ServiceBus are retired on September 30, 2026.</h1>
+    <h1>WindowsAzure.ServiceBus and Microsoft.Azure.ServiceBus were retired on September 30, 2026.</h1>
     <p class="lead">I move your code to Azure.Messaging.ServiceBus for a fixed price. You get a pull request with your own tests passing, and the runtime details that break after the build (settlement, lock renewal, message bodies) handled.</p>
     <div class="actions">
       <a class="btn primary" href="#pricing">See the fixed prices</a>
@@ -96,12 +96,26 @@ h1,p,li{overflow-wrap:break-word}
   </div>
 </section>
 
+<section id="quick-fix">
+  <div class="wrap">
+    <h2>Service Bus stopped working after September 30?</h2>
+    <p>Check SBMP first. <code>WindowsAzure.ServiceBus</code> uses SBMP unless you configured AMQP, and Microsoft's retirement notice says you can no longer use SBMP after that date. In code it shows up as <code>TransportType.NetMessaging</code>; in Service Bus Explorer, as a connection with the <code>NetMessaging</code> transport type.</p>
+    <p>The notice also says "You can keep using this library with the AMQP protocol after that date, but you'll no longer receive support or updates." Append this to the connection string:</p>
+    <pre><code>;TransportType=Amqp</code></pre>
+    <p>AMQP needs outbound ports 5671 and 5672. If only 443 is open, use <code>TransportType=AmqpWebSockets</code>. Test a real message end to end before deploying: <code>OperationTimeout</code> is ignored, <code>Receive(TimeSpan.Zero)</code> waits 10 seconds, and bodies are serialized differently over AMQP.</p>
+    <p class="sources">Sources:
+      <a href="https://azure.microsoft.com/updates/retirement-notice-update-your-azure-service-bus-sdk-libraries-by-30-september-2026/" rel="noopener">Retirement notice</a> &middot;
+      <a href="https://learn.microsoft.com/en-us/azure/service-bus-messaging/service-bus-amqp-dotnet" rel="noopener">WindowsAzure.ServiceBus with AMQP 1.0</a>
+    </p>
+  </div>
+</section>
+
 <section id="problem">
   <div class="wrap">
     <h2>What the retirement means for your app</h2>
     <ul>
       <li><strong>No more support or fixes</strong> for <code>Microsoft.Azure.ServiceBus</code> and <code>WindowsAzure.ServiceBus</code>, security fixes included. The packages keep loading, but you are on your own.</li>
-      <li><strong>SBMP stops working.</strong> <code>WindowsAzure.ServiceBus</code> uses the SBMP protocol by default. Connection strings without <code>TransportType=Amqp</code> are on SBMP, and Microsoft ends SBMP support on the same date.</li>
+      <li><strong>SBMP no longer works.</strong> <code>WindowsAzure.ServiceBus</code> uses the SBMP protocol by default. Connection strings without <code>TransportType=Amqp</code> are on SBMP, and Microsoft ended SBMP on the same date.</li>
       <li><strong>Azure Functions</strong> with the Service Bus extension 4.x or older use the retired types, and the in-process model itself ends support on November 10, 2026.</li>
       <li><strong>The new SDK behaves differently</strong> in ways that compile fine: auto-complete, a 5 minute lock renewal default, message bodies sent with <code>BrokeredMessage</code>, and <code>MessageId</code> no longer generated for you.</li>
       <li><strong>Not affected:</strong> <code>WindowsAzure.ServiceBus</code> used for WCF Relay, which Microsoft keeps supporting until further notice.</li>
